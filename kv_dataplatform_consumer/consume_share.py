@@ -2,6 +2,7 @@ import logging
 import pandas as pd
 from kv_dataplatform_consumer.crypto_utils import symmetric_decrypt_data, asymmetric_decrypt_symmetric_key
 import delta_sharing
+import base64
 
 ENC_SUFFIX = "_enc"
 NONCE_SUFFIX = "_nonce"
@@ -27,13 +28,15 @@ def consume_pii_table(df_table: pd.DataFrame, df_key_table: pd.DataFrame, asymme
             
             logging.info(f"Decrypted column '{col_name}': {joined_df[col_name].tolist()}")
             joined_df.drop(columns=[enc_col, nonce_col], inplace=True)
-    
+    joined_df.drop(columns=["key_id", "key"], inplace=True)
     return joined_df
 
-def consume_table_from_share(share_key_path: str, share_name: str, schema: str, table: str, asymmetric_private_key: str) -> pd.DataFrame:
-    table_url = share_key_path + f"#{share_name}.{schema}.{table}"
-    table_url_keys = share_key_path + f"#{share_name}.{schema}-keys.{table}"
-    df_table_metadata = delta_sharing.get_table_metadata(table_url)
+def consume_table_from_share(share_key_path: str, share_name: str, schema: str, table: str, asymmetric_private_key: bytes) -> pd.DataFrame:
+    table_url = f"{share_key_path}#{share_name}.{schema}.{table}"
+    table_url_keys = f"{share_key_path}#{share_name}.__keys__{schema}.{table}"
 
-    df_table = delta_sharing.load_table_changes_as_pandas(table_url)
+    df_table = delta_sharing.load_as_pandas(table_url)
     df_table_keys = delta_sharing.load_as_pandas(table_url_keys)
+    df_table_keys["key"] = df_table_keys["key"].apply(lambda key_enc: base64.standard_b64decode(key_enc))
+    
+    return consume_pii_table(df_table, df_table_keys, asymmetric_private_key)
