@@ -21,6 +21,7 @@ deltalake = "^0.21.0"
 pandas = "^2.2.3"
 pytest = "^8.3.3"
 pycryptodome = "^3.21.0"
+delta-sharing = "^1.2.0"
 
 
 [build-system]
