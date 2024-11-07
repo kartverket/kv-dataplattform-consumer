@@ -1,5 +1,5 @@
 import uuid
-from deltalake import DeltaTable, convert_to_deltalake
+from deltalake import DeltaTable
 from kv_dataplatform_consumer.consume_share import consume_pii_table
 from kv_dataplatform_consumer.crypto_utils import generate_public_private_key, asymmetric_encrypt_symmetric_key, generate_symmetric_key
 import pandas as pd
@@ -16,7 +16,7 @@ data = {
     "city": ["New York", "San Francisco", "Chicago", "Austin"]
 }
 
-def test_that_encrypted_then_decrypted_data_returns_original_column_for_a_recipient():
+def test_that_encrypted_then_decrypted_data_from_consume_pii_table_returns_original_column_for_a_recipient():
     # Arrange
     recipient_keys = generate_public_private_key()
     path = "./sample_delta_table"

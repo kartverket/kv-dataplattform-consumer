@@ -32,10 +32,8 @@ def consume_pii_table(df_table: pd.DataFrame, df_key_table: pd.DataFrame, asymme
 
 def consume_table_from_share(share_key_path: str, share_name: str, schema: str, table: str, asymmetric_private_key: str) -> pd.DataFrame:
     table_url = share_key_path + f"#{share_name}.{schema}.{table}"
-    table_url_keys = share_key_path + f"#{share_name}.{schema}.keys"
+    table_url_keys = share_key_path + f"#{share_name}.{schema}-keys.{table}"
     df_table_metadata = delta_sharing.get_table_metadata(table_url)
 
     df_table = delta_sharing.load_table_changes_as_pandas(table_url)
     df_table_keys = delta_sharing.load_as_pandas(table_url_keys)
-
-

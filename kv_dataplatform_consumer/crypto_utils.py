@@ -10,7 +10,6 @@ from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from base64 import b64encode, b64decode
 
-
 AES_DEFAULT_BYTES_KEY_SIZE_BYTES = 32 # Note: Mandatory for AEAD mode
 AES_DEFAULT_NONCE_SIZE_BYTES = 12 # Note: Mandatory for AEAD mode
 
