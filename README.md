@@ -18,7 +18,7 @@ Et repo som inneholder kode for en modul som gjør at man kan interagere med kry
 | qwkej123j | 1kocmmqwe |   30  | ce-232 |
 | koko2k313 | cmk2kpqeq |   40  | ce-232 |
 
-5. Deretter så vil man for hver consumer c ta inn deres public key = `pkc`, og da lage et entry, der man krypterer `key` med konsumenten sin offentlige nøkkel `pkc`. Da kan man lage et entry i __keys__c__pii_schema og en tabell som også heter person, som vil se slik ut: 
+5. Deretter så vil man for hver consumer c ta inn deres public key = `pkc`, og da lage et entry, der man krypterer `key` med konsumenten sin offentlige nøkkel `pkc`. Da kan man lage et entry i `__keys__c__pii_schema` og en tabell som også heter `person`, som vil se slik ut: 
 
 | key_id |     key     |
 | ------ | ----------- |
