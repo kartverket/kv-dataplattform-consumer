@@ -24,7 +24,7 @@ Et repo som inneholder kode for en modul som gjør at man kan interagere med kry
 | ------ | ----------- |
 | ce-232 | wqkeo123koq |
 
-6. Konsumenten kan da ta i bruk pakken i repoet, og bruke `consume_table_from_share` funksjonen i `consume_share.py`. Den tar inn en gitt tabell i et skjema, og den asymmetriske private nøkkelen til konsumenten = `pc`. `consume_table_from_share` vil da gitt person-tabellen, joine sammen `pii_schema.person` og `__keys__c__pii_schema.person`. Deretter henter den ut en rad, der den fisker ut den gjelden nøkkelen `key`. Den dekrypteres med `pc`. Deretter går den gjennom hver rad, og gitt `navn_enc` og `navn_nonce` så dekrypterer den raden med den symmetriske nøkkelen. Får da ut tabellen slik:
+6. Konsumenten kan da ta i bruk pakken i repoet, og bruke `consume_table_from_share` funksjonen i `consume_share.py`. Den tar inn en gitt tabell i et skjema, og den asymmetriske private nøkkelen til konsumenten = `pc`. `consume_table_from_share` vil da gitt person-tabellen, joine sammen `pii_schema.person` og `__keys__c__pii_schema.person`. Deretter henter den ut en rad, der den fisker ut den gjeldende nøkkelen `key`. Den dekrypteres med `pc`. Deretter går den gjennom hver rad, og gitt `navn_enc` og `navn_nonce` så dekrypterer den raden med den symmetriske nøkkelen. Får da ut tabellen slik:
 
 |    navn    | alder |
 | ---------- | ----- |
