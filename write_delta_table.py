@@ -2,7 +2,6 @@ from typing import Dict, List
 import pandas as pd
 from deltalake import write_deltalake
 from kv_dataplatform_consumer.crypto_utils import symmetric_encrypt_data
-import uuid
 
 def write_table(path: str, data: dict, key_id: str, key: bytes, cols_to_encrypt: List[str]) -> dict:
     # "Initial dump"
