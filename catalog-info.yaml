@@ -1,0 +1,12 @@
+# nonk8s
+apiVersion: "backstage.io/v1alpha1"
+kind: "Component"
+metadata:
+  name: "kv-dataplattform-consumer"
+  tags:
+  - "public"
+spec:
+  type: "library"
+  lifecycle: "production"
+  owner: "dataplattform"
+  system: "dataplattformtjenester"
