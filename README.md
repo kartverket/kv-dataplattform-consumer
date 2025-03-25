@@ -1,18 +1,32 @@
 # Beskrivelse
 Et repo som inneholder kode for en modul som gjør at man kan interagere med kryptert data, som er delt via f.eks Delta Sharing.
 
-## Installasjon
+## Bruk
+
 For å installere biblioteket kjører man bare 
 ```sh
-pip install kv-dataplatform-consumter
+pip install kv-dataplatform-consumer
+``
+Testet med versjon 3.13.1
+
+### Generer en egen nøkkel
+
+Som konsument av kryptert data vil du trenge en egen asymmentrisk nøkkel for å dekryptere Kartverkets datakey (symmetriske nøkkel i steg1 under). Den kan du generere på følgende måte 
+
+```python
+from kv_dataplatform_consumer import crypto_utils
+crypto_utils.generate_public_private_key()
 ```
 
-## Komme i gang
+Ta vare på `private_key` og lagre denne et sikkert sted hos deg selv, og del `public_key` med Kartverket. I første omgang kan den sendes manuelt til dine kontaktpersoner i Kartverket. 
+
+
+## Komme i gang med utvikling
 - Man må ha pipx og poetry installert
 - Deretter er det bare å kjøre `poetry install`
 - Så kan man kjøre testene via `poetry run pytest`
 
-## Kryptoflyt
+## Forklaring på kryptoflyten
 1. Generer en **unik** symmetrisk nøkkel = `key`
 2. Generer en tilhørende **unik** UUID = `key_id`
 3. Lagre denne et sikkert sted, slik at man senere kan slå opp på `key_id`
