@@ -6,7 +6,8 @@ Et repo som inneholder kode for en modul som gjør at man kan interagere med kry
 For å installere biblioteket kjører man bare 
 ```sh
 pip install kv-dataplatform-consumer
-``
+```
+
 Testet med versjon 3.13.1
 
 ### Generer en egen nøkkel
