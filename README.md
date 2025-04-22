@@ -21,6 +21,14 @@ crypto_utils.generate_public_private_key()
 
 Ta vare på `private_key` og lagre denne et sikkert sted hos deg selv, og del `public_key` med Kartverket. I første omgang kan den sendes manuelt til dine kontaktpersoner i Kartverket. 
 
+Om du ikke kan bruke biblioteket kan du bruke følgende kommandoer
+
+```
+# Generer RSA 4096 private key
+openssl genrsa -out private.pem 4096
+# Print public key til fil
+openssl rsa -in private.pem -pubout > public.pem
+```
 
 ## Komme i gang med utvikling
 - Man må ha pipx og poetry installert
