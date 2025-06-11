@@ -17,7 +17,7 @@ authors = ["Jonas Mossin Wagle <jonas.mossin@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.12"
 deltalake = "^0.21.0"
 pandas = "^2.2.3"
 pytest = "^8.3.3"

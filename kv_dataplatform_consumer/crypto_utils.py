@@ -32,20 +32,30 @@ def generate_symmetric_key() -> bytes:
 
 def symmetric_encrypt_data(raw_data: str, aes_key: bytes) -> Tuple[str, str]:
     nonce_bytes = get_random_bytes(AES_DEFAULT_NONCE_SIZE_BYTES)
-    raw = pad(raw_data.encode(), AES_DEFAULT_BYTES_KEY_SIZE_BYTES)
     cipher = ChaCha20_Poly1305.new(key=aes_key, nonce=nonce_bytes)
-    ciphertext_bytes, _ = cipher.encrypt_and_digest(raw)
     
-    ciphertext_str = b64encode(ciphertext_bytes).decode('utf-8')
-    nonce_str = b64encode(nonce_bytes).decode('utf-8')
-    return ciphertext_str, nonce_str
+    ciphertext, tag = cipher.encrypt_and_digest(raw_data.encode("utf-8"))
 
-def symmetric_decrypt_data(enc: str, aes_key: bytes, aes_nonce: str) -> str:
-    enc = b64decode(enc)
-    nonce = b64decode(aes_nonce)
+    # Java stores ciphertext+tag together
+    ciphertext_with_tag = ciphertext + tag
+    
+    ciphertext_b64 = b64encode(ciphertext_with_tag).decode("utf-8")
+    nonce_b64 = b64encode(nonce_bytes).decode("utf-8")
+    
+    return ciphertext_b64, nonce_b64
+
+def symmetric_decrypt_data(ciphertext_b64: str, aes_key: bytes, nonce_b64: str) -> str:
+    data = b64decode(ciphertext_b64)
+    nonce = b64decode(nonce_b64)
+
+    # Split out the last 16 bytes for tag (ChaCha20-Poly1305 tag size)
+    ciphertext, tag = data[:-16], data[-16:]
+
     cipher = ChaCha20_Poly1305.new(key=aes_key, nonce=nonce)
-    decrypted_data = unpad(cipher.decrypt(enc), AES_DEFAULT_BYTES_KEY_SIZE_BYTES).decode('utf-8')
-    return decrypted_data
+    plaintext = cipher.decrypt_and_verify(ciphertext, tag)
+    
+    return plaintext.decode("utf-8")
+
 
 
 #################################################
