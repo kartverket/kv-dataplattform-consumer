@@ -48,8 +48,8 @@ def test_that_table_from_a_share_returns_valid_data_given_a_private_key():
     client = delta_sharing.SharingClient(share_key_path)
     tables = client.list_all_tables()
     first_nonkey_table = list(filter(lambda table: not ("information_schema" in table.name or table.name.startswith("__keys__")), tables))[0]
-    
-    # Act    
+
+    # Act
     decrypted_df = consume_table_from_share(share_key_path, first_nonkey_table.share, first_nonkey_table.schema, first_nonkey_table.name, share_private_key)
     logging.info("Decrypted DF:")
     logging.info(decrypted_df.to_string())

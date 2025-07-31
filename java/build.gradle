@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+    id 'application' // optional if you want to run the app directly with "gradle run"
+    id 'maven-publish'
+}
+group = 'no.kartverket'
+
+def tagVersion = project.findProperty("integration_version")
+if (tagVersion?.startsWith("v")) {
+    tagVersion = tagVersion.substring(1)
+}
+version = tagVersion ?: '1.0.0-SNAPSHOT'
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly   'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+
+    // JUnit 4
+    testImplementation 'junit:junit:4.13.2'
+
+    // Vintage engine - enables JUnit 4 tests with JUnit 5
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.9.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// If your code has a main() method you want to run or build into a JAR
+application {
+    mainClass = 'no.kartverket.kv.Main'
+}
+
+// Configure tests to use JUnit 5
+test {
+    useJUnitPlatform()
+}
+
+// Configure JAR to set Main-Class in its manifest
+jar {
+    manifest {
+        attributes 'Main-Class': 'no.kartverket.kv.Main'
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/kartverket/kv-dataplatform-consumer-java")
+            credentials {
+                username = System.getenv("PACKAGE_USERNAME")?: System.getenv("GITHUB_USERNAME")
+                password = System.getenv("PACKAGE_TOKEN")?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+            artifactId = 'kv-dataplatform-consumer-java'
+
+        }
+    }
+}
