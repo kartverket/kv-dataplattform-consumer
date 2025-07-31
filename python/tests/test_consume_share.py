@@ -1,5 +1,8 @@
+import os
+import subprocess
 import uuid
 from deltalake import DeltaTable
+from flask import json
 from kv_dataplatform_consumer.consume_share import (
     consume_pii_table,
     consume_table_from_share,
@@ -63,31 +66,51 @@ def test_that_encrypted_then_decrypted_data_from_consume_pii_table_returns_origi
     assert all(x == y for x, y in zip(elems, data["city"]))
 
 
-def test_that_table_from_a_share_returns_valid_data_given_a_private_key():
-    # Arrange
-    share_key_path = "./config.share"
-    client = delta_sharing.SharingClient(share_key_path)
-    tables = client.list_all_tables()
-    first_nonkey_table = list(
-        filter(
-            lambda table: not (
-                "information_schema" in table.name or table.name.startswith("__keys__")
-            ),
-            tables,
-        )
-    )[0]
+def test_that_data_encrypted_with_java_can_be_decrypted_with_python():
+    # Get encrypted test data and keys from Java project and verify it can be decrypted with Python.
 
-    # Act
-    decrypted_df = consume_table_from_share(
-        share_key_path,
-        first_nonkey_table.share,
-        first_nonkey_table.schema,
-        first_nonkey_table.name,
-        share_private_key,
+    path_encryption_test = "../shared_test_data/encryption_test.json"
+    path_encryption_test_private_key = (
+        "../shared_test_data/encryption_test_private_key.pem"
     )
-    logging.info("Decrypted DF:")
-    logging.info(decrypted_df.to_string())
 
-    # Assert
-    elems = decrypted_df["city"].tolist()
-    assert all(x == y for x, y in zip(elems, data["city"]))
+    # If encrypted test data does not exist yet, run the Java test first to generate it
+    if not (
+        os.path.exists(path_encryption_test)
+        and os.path.exists(path_encryption_test_private_key)
+    ):
+        subprocess.run(
+            [
+                "../java/gradlew",
+                "-p",
+                "../java/",
+                "test",
+                "--tests",
+                "no.kartverket.kv.ConsumeShareTest.testEncryptedThenDecryptedDataReturnsOriginalColumnForRecipient",
+                "--rerun-tasks",
+            ],
+        )
+
+    with open(path_encryption_test, "r") as file:
+        json_data = json.loads(file.read())
+
+    with open(path_encryption_test_private_key, "r") as file:
+        private_key = file.read()
+
+    key_id = str(uuid.uuid4())
+
+    table_df = pd.DataFrame(
+        {
+            "key_id": [key_id] * len(json_data["encrypted_data"]),
+            "data_enc": json_data["encrypted_data"],
+            "data_nonce": json_data["nonces"],
+        }
+    )
+
+    keys_df = pd.DataFrame(
+        {"key_id": [key_id], "key": [base64.b64decode(json_data["encrypted_key"])]}
+    )
+
+    decrypted_data = consume_pii_table(table_df, keys_df, private_key)["data"]
+
+    assert all(x == y for x, y in zip(decrypted_data, json_data["original_data"]))

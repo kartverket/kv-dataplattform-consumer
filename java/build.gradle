@@ -55,7 +55,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/kartverket/kv-dataplatform-consumer-java")
+            url = uri("https://maven.pkg.github.com/kartverket/kv-dataplattform-consumer")
             credentials {
                 username = System.getenv("PACKAGE_USERNAME")?: System.getenv("GITHUB_USERNAME")
                 password = System.getenv("PACKAGE_TOKEN")?: System.getenv("GITHUB_TOKEN")
@@ -65,7 +65,7 @@ publishing {
     publications {
         gpr(MavenPublication) {
             from(components.java)
-            artifactId = 'kv-dataplatform-consumer-java'
+            artifactId = 'kv-dataplattform-consumer'
 
         }
     }

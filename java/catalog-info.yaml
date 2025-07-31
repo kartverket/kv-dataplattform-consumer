@@ -2,7 +2,7 @@
 apiVersion: "backstage.io/v1alpha1"
 kind: "Component"
 metadata:
-  name: "kv-dataplatform-consumer-java"
+  name: "kv-dataplattform-consumer"
   tags:
   - "internal"
 spec:
