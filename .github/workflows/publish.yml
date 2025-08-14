@@ -15,14 +15,12 @@ jobs:
           java-version: 17
           distribution: temurin
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v3
-        with:
-          working-directory: java
+        uses: gradle/actions/wrapper-validation@v3
       - name: Publish package
         uses: gradle/actions/setup-gradle@v3
         with:
           arguments: publish -Pintegration_version=${{github.ref_name}}
-          working-directory: java
+          build-root-directory: java
         env:
           PACKAGE_USERNAME: ${{ secrets.PACKAGE_USERNAME }}
           PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
