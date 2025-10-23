@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+	name: kv-dataplattform-consume
+spec:
+	type: url
+	targets:
+    - https://github.com/kartverket/kv-dataplattform-consumer/blob/main/java/catalog-info.yaml
+    - https://github.com/kartverket/kv-dataplattform-consumer/blob/main/python/catalog-info.yaml
