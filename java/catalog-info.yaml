@@ -1,12 +1,11 @@
-# nonk8s
-apiVersion: "backstage.io/v1alpha1"
-kind: "Component"
+apiVersion: backstage.io/v1alpha1
+kind: Component
 metadata:
-  name: "kv-dataplattform-consumer"
+  name: kv-dataplattform-consumer
   tags:
-  - "internal"
+    - internal
 spec:
-  type: "library"
-  lifecycle: "production"
-  owner: "innsikt"
-  system: "klikk-migrering"
+  type: library
+  lifecycle: production
+  owner: innsikt
+  system: klikk-migrering
